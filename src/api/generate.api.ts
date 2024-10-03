@@ -9,7 +9,7 @@ export const generateImage = async (
   url: string,
   color: string,
   backgroundColor: string,
-  agression: number,
+  agression: string,
   strength: string
 ) => {
   return await axios.post<GenerateImageResponse>(
