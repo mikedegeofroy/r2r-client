@@ -31,3 +31,23 @@ export function hexToColor(hex: string) {
 
   return color ? color[1] : 'black';
 }
+
+export function sliderToBodyType(amount: number): string {
+  if (amount > 0.9) {
+    return "Muscular";
+  } else if (amount > 0.7) {
+    return "Athletic";
+  } else if (amount > 0.5) {
+    return "Average";
+  } else if (amount > 0.3) {
+    return "Slim";
+  } else if (amount > 0.1) {
+    return "Petite";
+  } else {
+    return "Very Small";
+  }
+}
+
+export function sliderToAgression(amount: number): number {
+  return (amount / 100) * 1.5;
+}

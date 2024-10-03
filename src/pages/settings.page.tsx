@@ -3,7 +3,7 @@ import { uploadFile } from '@/api/upload.api';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ColorSelector } from '@/components/ui/color-selector';
 import { Slider } from '@/components/ui/slider';
-import { hexToColor } from '@/lib/utils';
+import { hexToColor, sliderToAgression, sliderToBodyType } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -16,6 +16,9 @@ export const SettingsPage = () => {
 
   const [adidasColor, setAdidasColor] = useState<string>('#FF6A52');
   const [backgroundColor, setBackgroundColor] = useState<string>('#FF6A52');
+  const [strength, setStrength] = useState<string>('average');
+
+  const [agression, setAgression] = useState<number>(0.75);
 
   const onBack = () => {
     navigate('/');
@@ -25,7 +28,9 @@ export const SettingsPage = () => {
     const res = await generateImage(
       photoUrl,
       hexToColor(adidasColor),
-      backgroundColor
+      backgroundColor,
+      agression,
+      strength
     );
     if (res.data) {
       navigate(`/result/${res.data.id}`);
@@ -122,11 +127,25 @@ export const SettingsPage = () => {
         </div>
         <div>
           <p className='text-[#B1B1B1]'>качек / дрыщь</p>
-          <Slider max={100} min={0} defaultValue={[50]} />
+          <Slider
+            onValueChange={(value) => {
+              setStrength(sliderToBodyType(value[0]));
+            }}
+            max={100}
+            min={0}
+            defaultValue={[50]}
+          />
         </div>
         <div>
           <p className='text-[#B1B1B1]'>уровень агрессии</p>
-          <Slider max={100} min={0} defaultValue={[50]} />
+          <Slider
+            onValueChange={(value) => {
+              setAgression(sliderToAgression(value[0]));
+            }}
+            max={100}
+            min={0}
+            defaultValue={[50]}
+          />
         </div>
       </div>
       <button

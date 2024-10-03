@@ -8,7 +8,9 @@ interface GenerateImageResponse {
 export const generateImage = async (
   url: string,
   color: string,
-  backgroundColor: string
+  backgroundColor: string,
+  agression: number,
+  strength: string
 ) => {
   return await axios.post<GenerateImageResponse>(
     `${SERVER_API}/avatar/generate`,
@@ -16,6 +18,8 @@ export const generateImage = async (
       url,
       color,
       backgroundColor,
+      agression,
+      strength
     }
   );
 };
