@@ -1,1 +1,1 @@
-export const SERVER_API = import.meta.env.VITE_BACKEND_URL;
+export const SERVER_API = 'https://r2r.mikedegeofroy.com';
