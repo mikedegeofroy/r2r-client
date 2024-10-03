@@ -6,6 +6,7 @@ interface ColorSelectorProps {
   defaultColor?: number;
   random?: boolean;
   transparent?: boolean;
+  onColorChange?: (color: string) => void;
 }
 
 export const ColorSelector = ({
@@ -13,6 +14,7 @@ export const ColorSelector = ({
   defaultColor = 0,
   random = false,
   transparent = false,
+  onColorChange,
 }: ColorSelectorProps) => {
   const colorList = [...colors];
 
@@ -31,9 +33,10 @@ export const ColorSelector = ({
   const [selectedColor, setSelectedColor] = useState<string | null>(
     random ? getRandomColorIndex() : colorList[defaultColor] ?? null
   );
+  if (onColorChange) onColorChange(selectedColor ?? '')
 
   const handleCheckboxChange = (color: string) => {
-    setSelectedColor((prev) => (prev === color ? null : color));
+    setSelectedColor(color);
   };
 
   return (

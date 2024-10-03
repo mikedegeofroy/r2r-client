@@ -10,11 +10,11 @@ function App() {
       element: <HomePage />,
     },
     {
-      path: '/settings',
+      path: '/settings/:url',
       element: <SettingsPage />,
     },
     {
-      path: '/result',
+      path: '/result/:id',
       element: <ResultPage />,
     },
   ]);

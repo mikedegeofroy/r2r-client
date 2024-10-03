@@ -1,3 +1,4 @@
+import { uploadFile } from '@/api/upload.api';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,11 +12,11 @@ export const HomePage = () => {
     // make sure that it's not null or undefined
     if (files) {
       const formData = new FormData();
-      formData.append('avatar', files[0]);
-    }
-    // need to set something
+      formData.append('file', files[0]);
 
-    navigate('settings')
+      const res = await uploadFile(formData);
+      if (res.data) navigate(`/settings/${res.data.url}`);
+    }
   };
 
   return (
