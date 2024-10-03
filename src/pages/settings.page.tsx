@@ -29,7 +29,7 @@ export const SettingsPage = () => {
       photoUrl,
       hexToColor(adidasColor),
       backgroundColor,
-      agression,
+      agression.toFixed(0),
       strength
     );
     if (res.data) {
