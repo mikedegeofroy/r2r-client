@@ -17,7 +17,7 @@ export const ResultPage = () => {
           const response = await getStatus(id);
           setStatus(response.data.status);
 
-          if (response.data.status !== 'InProgress') {
+          if (response.data.status !== 'InProgress' && response.data.status !== 'InQueue') {
             setUrl(response.data.url);
             clearInterval(intervalId); // Stop polling once URL is received
           }
@@ -50,11 +50,17 @@ export const ResultPage = () => {
       <div className='flex flex-col gap-5'>
         {url && <img src={url} alt='' />}
         <div className='text-center'>
+          {status === 'InQueue' && (
+            <p>In queue, please wait... ({count})</p>
+          )}
           {status === 'InProgress' && (
             <p>Processing, please wait... ({count})</p>
           )}
+          {status === 'Failed' && (
+            <p>Something went wrong!</p>
+          )}
         </div>
-        {status !== 'InProgress' && (
+        {status === 'Completed' && (
           <div className='flex gap-5 justify-center'>
             <button
               onClick={clickRedo}
