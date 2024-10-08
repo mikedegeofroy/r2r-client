@@ -1,66 +1,53 @@
-import { getStatus } from '@/api/status.api';
+import { pollGenerationStatus } from '@/stores/generation.api';
+import { useGenerationStore } from '@/stores/generation.store';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const ResultPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [status, setStatus] = useState<string>('pending');
-  const [url, setUrl] = useState<string | null>(null);
+  const { generations } = useGenerationStore();
   const [count, setCount] = useState(0);
 
+  const currentGeneration = generations.find((gen) => gen.id === id);
+
   useEffect(() => {
-    const pollStatus = async () => {
-      setCount((count) => count + 1);
-      if (id) {
-        try {
-          const response = await getStatus(id);
-          setStatus(response.data.status);
+    const intervalId = setInterval(async () => {
+      setCount((prev) => prev + 1);
+      await pollGenerationStatus();
+    }, 5000); // Poll every 5 seconds
 
-          if (response.data.status !== 'InProgress' && response.data.status !== 'InQueue') {
-            setUrl(response.data.url);
-            clearInterval(intervalId); // Stop polling once URL is received
-          }
-        } catch (error) {
-          console.error('Error fetching status:', error);
-        }
-      }
-    };
-
-    // Polling interval
-    pollStatus();
-    const intervalId = setInterval(pollStatus, 5000); // Check every 5 seconds
-
-    // Cleanup the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, [id]);
+  }, []);
 
   const clickRedo = () => {
     navigate(-1);
   };
 
   const clickDownload = () => {
-    if (url) {
-      window.location.href = url; // Download the file if URL is available
+    if (currentGeneration?.status === 'Completed' && currentGeneration.result) {
+      window.location.href = currentGeneration.result;
     }
   };
 
   return (
     <div className='max-w-[500px] w-svw min-h-svh flex flex-col p-5 justify-around mx-auto'>
       <div className='flex flex-col gap-5'>
-        {url && <img src={url} alt='' />}
+        {currentGeneration?.result && (
+          <img src={currentGeneration?.result} alt='' />
+        )}
         <div className='text-center'>
-          {status === 'InQueue' && (
+          {currentGeneration?.status === 'InQueue' && (
             <p>In queue, please wait... ({count})</p>
           )}
-          {status === 'InProgress' && (
+          {currentGeneration?.status === 'InProgress' && (
             <p>Processing, please wait... ({count})</p>
           )}
-          {status === 'Failed' && (
+          {currentGeneration?.status === 'Failed' && (
             <p>Something went wrong!</p>
           )}
         </div>
-        {status === 'Completed' && (
+        {currentGeneration?.status === 'Completed' && (
           <div className='flex gap-5 justify-center'>
             <button
               onClick={clickRedo}
@@ -71,7 +58,7 @@ export const ResultPage = () => {
             <button
               onClick={clickDownload}
               className='w-[35%] py-1 bg-secondary rounded-lg text-center active:scale-95'
-              disabled={!url} // Disable download button if URL is not ready
+              disabled={!currentGeneration?.result} // Disable download button if URL is not ready
             >
               скачать <br /> портрет
             </button>

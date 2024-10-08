@@ -3,7 +3,7 @@ import axios from 'axios';
 
 interface StatusResponse {
   id: string;
-  status: string;
+  status: 'Failed' | 'InQueue' | 'InProgress' | 'Completed';
   url: string;
 }
 
