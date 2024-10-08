@@ -1,4 +1,5 @@
 import { SERVER_API } from '@/lib/constants';
+import { useGenerationStore } from '@/stores/generation.store';
 import axios from 'axios';
 
 interface GenerateImageResponse {
@@ -12,14 +13,32 @@ export const generateImage = async (
   agression: string,
   strength: string
 ) => {
-  return await axios.post<GenerateImageResponse>(
-    `${SERVER_API}/avatar/generate`,
-    {
-      url,
-      color,
-      backgroundColor,
-      agression,
-      strength
-    }
-  );
+  try {
+    // Call the API to generate an image
+    const response = await axios.post<GenerateImageResponse>(
+      `${SERVER_API}/avatar/generate`,
+      {
+        url,
+        color,
+        backgroundColor,
+        agression,
+        strength,
+      }
+    );
+
+    // After successful API call, add the new generation to the store
+    const generationId = response.data.id;
+
+    // Add the generation to the zustand store with initial status "InQueue"
+    useGenerationStore.getState().addGeneration({
+      id: generationId,
+      source: url,
+      status: 'InQueue', // or 'InProgress' based on your flow
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Error generating image:', error);
+    throw error; // Re-throw the error to handle it elsewhere if needed
+  }
 };

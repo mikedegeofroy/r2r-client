@@ -1,1 +1,1 @@
-export const SERVER_API = 'https://r2r.mikedegeofroy.com';
+export const SERVER_API = 'http://127.0.0.1:5001';
