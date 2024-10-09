@@ -3,15 +3,18 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface IGenerationStore {
   generations: IGeneration[];
+  sources: string[]; // Global array of sources
   addGeneration: (generation: IGeneration) => void;
   updateGenerationStatus: (id: string, status: IGeneration['status']) => void;
   completeGeneration: (id: string, result: string) => void;
-  clearGenerations: () => void; // New function to clear the store
+  addSource: (source: string) => void; // Add a global source
+  removeSource: (source: string) => void; // Remove a global source
+  clearGenerations: () => void; // Clear all generations
 }
 
 interface IGeneration {
   id: string;
-  source: string;
+  source: string; // Individual generation source
   status: 'Failed' | 'InQueue' | 'InProgress' | 'Completed';
   result?: string;
 }
@@ -20,6 +23,7 @@ export const useGenerationStore = create<IGenerationStore>()(
   persist(
     (set) => ({
       generations: [],
+      sources: [], // Initialize the global sources array
 
       // Add a new generation
       addGeneration: (generation: IGeneration) => {
@@ -43,6 +47,20 @@ export const useGenerationStore = create<IGenerationStore>()(
           generations: state.generations.map((gen) =>
             gen.id === id ? { ...gen, status: 'Completed', result } : gen
           ),
+        }));
+      },
+
+      // Add a global source
+      addSource: (source: string) => {
+        set((state) => ({
+          sources: [...state.sources, source],
+        }));
+      },
+
+      // Remove a global source
+      removeSource: (source: string) => {
+        set((state) => ({
+          sources: state.sources.filter((s) => s !== source),
         }));
       },
 

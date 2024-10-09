@@ -1,10 +1,13 @@
 import { uploadFile } from '@/api/upload.api';
+import { useGenerationStore } from '@/stores/generation.store';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
   const inputUpdateAvatarPhoto = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  const { addSource } = useGenerationStore();
 
   const handleImageChange = async (e: React.FormEvent<HTMLInputElement>) => {
     console.log(e);
@@ -15,7 +18,8 @@ export const HomePage = () => {
       formData.append('file', files[0]);
 
       const res = await uploadFile(formData);
-      if (res.data) navigate(`/settings/${res.data.url}`);
+      addSource(res.data.url);
+      navigate('/settings');
     }
   };
 

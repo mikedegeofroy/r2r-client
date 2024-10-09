@@ -1,19 +1,16 @@
 import { pollGenerationStatus } from '@/stores/generation.api';
 import { useGenerationStore } from '@/stores/generation.store';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import spinner from '../assets/spinner.svg';
 
 export const ResultPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   const { generations } = useGenerationStore();
-  const [count, setCount] = useState(0);
-
-  const currentGeneration = generations.find((gen) => gen.id === id);
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      setCount((prev) => prev + 1);
       await pollGenerationStatus();
     }, 5000); // Poll every 5 seconds
 
@@ -24,16 +21,37 @@ export const ResultPage = () => {
     navigate(-1);
   };
 
-  const clickDownload = () => {
-    if (currentGeneration?.status === 'Completed' && currentGeneration.result) {
-      window.location.href = currentGeneration.result;
-    }
-  };
+  // const clickDownload = () => {
+  // if (currentGeneration?.status === 'Completed' && currentGeneration.result) {
+  //   window.location.href = currentGeneration.result;
+  // }
+  // };
 
   return (
-    <div className='max-w-[500px] w-svw min-h-svh flex flex-col p-5 justify-around mx-auto'>
-      <div className='flex flex-col gap-5'>
-        {currentGeneration?.result && (
+    <div className='w-svw min-h-svh p-5 mx-auto'>
+      <div className='grid grid-cols-2 gap-10'>
+        <button
+          onClick={clickRedo}
+          className='py-1 active:scale-95 text-left text-2xl'
+        >
+          {'<- назад'}
+        </button>
+        <div></div>
+        {generations.map((x) => {
+          return (
+            <>
+              <img src={x.source} alt='' />
+              <div className='bg-[#525252] h-full w-full flex justify-center items-center'>
+                {x.result ? (
+                  <img className='h-full w-full' src={x.result} alt='' />
+                ) : (
+                  <img className='animate-reverse-spin' src={spinner} />
+                )}
+              </div>
+            </>
+          );
+        })}
+        {/* {currentGeneration?.result && (
           <img src={currentGeneration?.result} alt='' />
         )}
         <div className='text-center'>
@@ -63,7 +81,7 @@ export const ResultPage = () => {
               скачать <br /> портрет
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
