@@ -28,7 +28,7 @@ export const ResultPage = () => {
   // };
 
   return (
-    <div className='w-svw min-h-svh p-5 mx-auto'>
+    <div className='max-w-[500px] w-svw min-h-svh p-5 mx-auto'>
       <div className='grid grid-cols-2 gap-10'>
         <button
           onClick={clickRedo}
@@ -40,10 +40,12 @@ export const ResultPage = () => {
         {generations.map((x) => {
           return (
             <>
-              <img src={x.source} alt='' />
-              <div className='bg-[#525252] h-full w-full flex justify-center items-center'>
-                {x.result ? (
-                  <img className='h-full w-full' src={x.result} alt='' />
+              <img className='aspect-square object-cover' src={x.source} alt='' />
+              <div className='bg-[#525252] aspect-square h-full w-full flex justify-center items-center'>
+                {x.status === 'Completed' ? (
+                  <img className='object-cover h-full w-full' src={x.result} alt='' />
+                ) : x.status === 'Failed' ? (
+                  <>error</>
                 ) : (
                   <img className='animate-reverse-spin' src={spinner} />
                 )}
@@ -51,37 +53,6 @@ export const ResultPage = () => {
             </>
           );
         })}
-        {/* {currentGeneration?.result && (
-          <img src={currentGeneration?.result} alt='' />
-        )}
-        <div className='text-center'>
-          {currentGeneration?.status === 'InQueue' && (
-            <p>In queue, please wait... ({count})</p>
-          )}
-          {currentGeneration?.status === 'InProgress' && (
-            <p>Processing, please wait... ({count})</p>
-          )}
-          {currentGeneration?.status === 'Failed' && (
-            <p>Something went wrong!</p>
-          )}
-        </div>
-        {currentGeneration?.status === 'Completed' && (
-          <div className='flex gap-5 justify-center'>
-            <button
-              onClick={clickRedo}
-              className='w-[35%] py-1 bg-destructive rounded-lg text-center active:scale-95'
-            >
-              переделать
-            </button>
-            <button
-              onClick={clickDownload}
-              className='w-[35%] py-1 bg-secondary rounded-lg text-center active:scale-95'
-              disabled={!currentGeneration?.result} // Disable download button if URL is not ready
-            >
-              скачать <br /> портрет
-            </button>
-          </div>
-        )} */}
       </div>
     </div>
   );

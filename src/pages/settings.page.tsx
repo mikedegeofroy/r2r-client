@@ -12,7 +12,7 @@ export const SettingsPage = () => {
   const inputUpdateAvatarPhoto = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const { sources } = useGenerationStore();
+  const { sources, addSource } = useGenerationStore();
 
   const [selectedSources, setSelectedSources] = useState<string[]>([]); // State for selected sources
   const [adidasColor, setAdidasColor] = useState<string>('#FF6A52');
@@ -45,7 +45,7 @@ export const SettingsPage = () => {
       formData.append('file', files[0]);
 
       const res = await uploadFile(formData);
-      if (res.data) navigate(`/settings/${res.data.url}`);
+      addSource(res.data.url);
     }
   };
 
@@ -59,14 +59,14 @@ export const SettingsPage = () => {
 
   return (
     <>
-      <div className='w-svw min-h-svh p-5 space-y-5 mx-auto pb-24'>
+      <div className='max-w-[500px] w-svw min-h-svh p-5 space-y-5 mx-auto pb-24'>
         <p onClick={onBack} className='text-2xl cursor-pointer w-fit'>
           {'<- назад'}
         </p>
         {sources.length === 1 && (
           <div className='mx-auto max-w-[75%] relative mt-2 mb-10'>
             <img
-              className='max-w-[500px] mx-auto'
+              className='max-w-[500px]'
               src={`https://r2r-comfyui.s3.amazonaws.com/users/${sources[0]}`}
               alt=''
             />
@@ -123,7 +123,6 @@ export const SettingsPage = () => {
           <div>
             <p className='text-[#B1B1B1] pb-4'>цвет фона</p>
             <ColorSelector
-              transparent
               random
               onColorChange={(color) => {
                 setBackgroundColor(color);
@@ -171,7 +170,7 @@ export const SettingsPage = () => {
                 src={`https://r2r-comfyui.s3.amazonaws.com/users/${source}`}
                 alt=''
                 onClick={() => toggleSourceSelection(source)}
-                className={`cursor-pointer ${
+                className={`cursor-pointer aspect-square object-cover ${
                   selectedSources.includes(source)
                     ? 'border-4 border-red-500'
                     : ''
