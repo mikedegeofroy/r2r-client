@@ -7,16 +7,24 @@ interface IGenerationStore {
   addGeneration: (generation: IGeneration) => void;
   updateGenerationStatus: (id: string, status: IGeneration['status']) => void;
   completeGeneration: (id: string, result: string) => void;
+  removeGeneration: (id: string) => void; // Remove a generation by ID
   addSource: (source: string) => void; // Add a global source
   removeSource: (source: string) => void; // Remove a global source
   clearGenerations: () => void; // Clear all generations
 }
 
-interface IGeneration {
+export interface IGeneration {
   id: string;
   source: string; // Individual generation source
   status: 'Failed' | 'InQueue' | 'InProgress' | 'Completed';
   result?: string;
+  parameters: {
+    url: string;
+    color: string;
+    backgroundColor: string;
+    agression: string;
+    strength: string;
+  };
 }
 
 export const useGenerationStore = create<IGenerationStore>()(
@@ -25,7 +33,7 @@ export const useGenerationStore = create<IGenerationStore>()(
       generations: [],
       sources: [], // Initialize the global sources array
 
-      // Add a new generation
+      // Add a new generation with parameters
       addGeneration: (generation: IGeneration) => {
         set((state) => ({
           generations: [...state.generations, generation],
@@ -47,6 +55,13 @@ export const useGenerationStore = create<IGenerationStore>()(
           generations: state.generations.map((gen) =>
             gen.id === id ? { ...gen, status: 'Completed', result } : gen
           ),
+        }));
+      },
+
+      // Remove a generation by its ID
+      removeGeneration: (id: string) => {
+        set((state) => ({
+          generations: state.generations.filter((gen) => gen.id !== id),
         }));
       },
 
