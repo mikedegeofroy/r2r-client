@@ -8,6 +8,5 @@ interface StatusResponse {
 }
 
 export const getStatus = async (id: string) => {
-  console.log('getting status')
   return await axios.get<StatusResponse>(`${SERVER_API}/avatar/status?id=${id}`);
 };

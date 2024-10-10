@@ -5,6 +5,7 @@ import { ColorSelector } from '@/components/ui/color-selector';
 import { Slider } from '@/components/ui/slider';
 import { hexToColor, sliderToAgression, sliderToBodyType } from '@/lib/utils';
 import { useGenerationStore } from '@/stores/generation.store';
+import { X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +13,7 @@ export const SettingsPage = () => {
   const inputUpdateAvatarPhoto = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const { sources, addSource } = useGenerationStore();
+  const { sources, addSource, removeSource } = useGenerationStore();
 
   const [selectedSources, setSelectedSources] = useState<string[]>([]); // State for selected sources
   const [adidasColor, setAdidasColor] = useState<string>('#FF6A52');
@@ -94,11 +95,11 @@ export const SettingsPage = () => {
           <div className='flex flex-col gap-2'>
             <div className='flex gap-2 py-2'>
               <Checkbox />
-              <p className='text-lg'>высокое качество</p>
+              <p className='text-lg'>upscale</p>
             </div>
             <div className='flex gap-2 py-2'>
               <Checkbox />
-              <p className='text-lg'>интерфейс игры [+]</p>
+              <p className='text-lg'>интерфейс поверх</p>
             </div>
           </div>
           <div>
@@ -140,7 +141,7 @@ export const SettingsPage = () => {
             />
           </div>
           <div>
-            <p className='text-[#B1B1B1]'>качек / дрыщь</p>
+            <p className='text-[#B1B1B1]'>дрыщь / качек</p>
             <Slider
               onValueChange={(value) => {
                 setStrength(sliderToBodyType(value[0]));
@@ -165,17 +166,25 @@ export const SettingsPage = () => {
         <div className='h-full grid grid-cols-3 gap-2'>
           {sources.length > 1 &&
             sources.map((source) => (
-              <img
-                key={source}
-                src={`https://r2r-comfyui.s3.amazonaws.com/users/${source}`}
-                alt=''
-                onClick={() => toggleSourceSelection(source)}
-                className={`cursor-pointer aspect-square object-cover ${
-                  selectedSources.includes(source)
-                    ? 'border-4 border-red-500'
-                    : ''
-                }`}
-              />
+              <div className='relative'>
+                <div
+                  onClick={() => {
+                    removeSource(source);
+                  }}
+                  className='absolute right-2 cursor-pointer top-2 bg-[#8B0000] rounded-full p-1'
+                >
+                  <X className='h-3 w-3' />
+                </div>
+                <img
+                  key={source}
+                  src={`https://r2r-comfyui.s3.amazonaws.com/users/${source}`}
+                  alt=''
+                  onClick={() => toggleSourceSelection(source)}
+                  className={`border-4 cursor-pointer aspect-square object-cover ${
+                    selectedSources.includes(source) ? 'border-red-500' : ''
+                  }`}
+                />
+              </div>
             ))}
         </div>
       </div>

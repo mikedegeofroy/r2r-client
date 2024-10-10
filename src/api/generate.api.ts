@@ -34,6 +34,13 @@ export const generateImage = async (
       id: generationId,
       source: url,
       status: 'InQueue', // or 'InProgress' based on your flow
+      parameters: { // Storing the parameters used in the generation process
+        url,
+        color,
+        backgroundColor,
+        agression,
+        strength,
+      },
     });
 
     return response;
