@@ -1,11 +1,12 @@
 import { generateImage } from '@/api/generate.api';
 import { uploadFile } from '@/api/upload.api';
+import ImageModal from '@/components/image-modal';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ColorSelector } from '@/components/ui/color-selector';
 import { Slider } from '@/components/ui/slider';
 import { hexToColor, sliderToAgression, sliderToBodyType } from '@/lib/utils';
 import { useGenerationStore } from '@/stores/generation.store';
-import { X } from 'lucide-react';
+import { X, ZoomIn } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,6 +21,19 @@ export const SettingsPage = () => {
   const [backgroundColor, setBackgroundColor] = useState<string>('#FF6A52');
   const [strength, setStrength] = useState<string>('average');
   const [agression, setAgression] = useState<number>(0.75);
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal open/close
+  const [currentImage, setCurrentImage] = useState<string | null>(null); // Manage current image for modal
+
+  const openModal = (imageSrc: string) => {
+    setCurrentImage(imageSrc);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCurrentImage(null);
+  };
 
   const onBack = () => {
     navigate('/');
@@ -169,6 +183,16 @@ export const SettingsPage = () => {
             sources.map((source) => (
               <div className='relative'>
                 <div
+                  onClick={() =>
+                    openModal(
+                      `https://r2r-comfyui.s3.amazonaws.com/users/${source}`
+                    )
+                  } // Handle deletion
+                  className='absolute left-2 cursor-pointer top-2 bg-[#D9D9D9] rounded-full p-1'
+                >
+                  <ZoomIn className='text-[#383838] h-5 w-5' />
+                </div>
+                <div
                   onClick={() => {
                     removeSource(source);
                   }}
@@ -197,6 +221,11 @@ export const SettingsPage = () => {
           генерировать портрет
         </button>
       </div>
+      <ImageModal
+        isOpen={isModalOpen}
+        imageSrc={currentImage}
+        onClose={closeModal}
+      />
     </>
   );
 };

@@ -4,14 +4,17 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import spinner from '../assets/spinner.svg';
-import { X } from 'lucide-react';
+import { X, ZoomIn } from 'lucide-react';
 import { generateImage } from '@/api/generate.api';
 import { saveAs } from 'file-saver';
 import { Checkbox } from '@/components/ui/checkbox';
+import ImageModal from '@/components/image-modal';
 
 export const ResultPage = () => {
   const navigate = useNavigate();
   const { generations, removeGeneration } = useGenerationStore(); // Access removeGeneration to handle deletion
+  const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal open/close
+  const [currentImage, setCurrentImage] = useState<string | null>(null); // Manage current image for modal
 
   // State to keep track of selected images
   const [selectedGenerations, setSelectedGenerations] = useState<string[]>([]);
@@ -78,6 +81,16 @@ export const ResultPage = () => {
     }
   };
 
+  const openModal = (imageSrc: string) => {
+    setCurrentImage(imageSrc);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCurrentImage(null);
+  };
+
   return (
     <>
       <div className='max-w-[500px] w-svw min-h-svh p-5 mx-auto pb-24'>
@@ -117,8 +130,14 @@ export const ResultPage = () => {
                     />
                   )}
                   <div
+                    onClick={() => openModal(x.source)} // Handle deletion
+                    className='absolute left-2 cursor-pointer top-2 bg-[#D9D9D9] rounded-full p-1'
+                  >
+                    <ZoomIn className='text-[#383838] h-5 w-5' />
+                  </div>
+                  <div
                     onClick={() => removeGeneration(x.id)} // Handle deletion
-                    className='absolute right-2 cursor-pointer top-2 bg-[#8B0000] rounded-full p-1'
+                    className='absolute right-2 cursor-pointer top-2 bg-[#8B0000] rounded-full p-2'
                   >
                     <X className='h-3 w-3' />
                   </div>
@@ -129,9 +148,15 @@ export const ResultPage = () => {
                   />
                 </div>
                 <div key={`${x.id}_result`} className='m-5 aspect-square'>
-                  <div className='bg-[#525252] h-full w-full flex justify-center items-center'>
+                  <div className='relative bg-[#525252] h-full w-full flex justify-center items-center'>
                     {x.status === 'Completed' ? (
                       <div className='relative'>
+                        <div
+                          onClick={() => openModal(x.result!)} // Handle deletion
+                          className='absolute left-2 cursor-pointer top-2 bg-[#D9D9D9] rounded-full p-1'
+                        >
+                          <ZoomIn className='text-[#383838] h-5 w-5' />
+                        </div>
                         <Checkbox
                           checked={selectedGenerations.includes(x.id)}
                           onCheckedChange={() => handleCheckboxChange(x.id)}
@@ -169,6 +194,11 @@ export const ResultPage = () => {
             : `скачать выбранные (${selectedGenerations.length})`}
         </button>
       </div>
+      <ImageModal
+        isOpen={isModalOpen}
+        imageSrc={currentImage}
+        onClose={closeModal}
+      />
     </>
   );
 };
