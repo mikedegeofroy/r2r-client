@@ -24,7 +24,7 @@ export const HomePage = () => {
   };
 
   return (
-    <div className='max-w-[500px] h-svh w-svw flex flex-col justify-around mx-auto'>
+    <div className='max-w-[500px] min-h-svh space-y-5 w-svw flex flex-col justify-around mx-auto pb-10'>
       <h1 className='text-3xl font-medium text-center'>ФОТОАТЕЛЬЕ</h1>
       <div className='flex gap-8 flex-col'>
         <div className='mx-auto'>

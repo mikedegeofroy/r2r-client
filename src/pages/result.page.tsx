@@ -81,7 +81,7 @@ export const ResultPage = () => {
   return (
     <>
       <div className='max-w-[500px] w-svw min-h-svh p-5 mx-auto pb-24'>
-        <div className='grid grid-cols-2 gap-5'>
+        <div className='grid grid-cols-2'>
           <button
             onClick={clickRedo}
             className='py-1 active:scale-95 text-left text-2xl'
