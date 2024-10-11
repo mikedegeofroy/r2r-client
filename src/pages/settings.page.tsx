@@ -26,7 +26,7 @@ export const SettingsPage = () => {
   };
 
   const onGenerate = async () => {
-    for (const source of selectedSources) {
+    for (const source of sources.length !== 1 ? selectedSources : sources) {
       await generateImage(
         `https://r2r-comfyui.s3.amazonaws.com/users/${source}`,
         hexToColor(adidasColor),
@@ -46,6 +46,7 @@ export const SettingsPage = () => {
       formData.append('file', files[0]);
 
       const res = await uploadFile(formData);
+      removeSource(sources[0]);
       addSource(res.data.url);
     }
   };
@@ -65,9 +66,9 @@ export const SettingsPage = () => {
           {'<- назад'}
         </p>
         {sources.length === 1 && (
-          <div className='mx-auto max-w-[75%] relative mt-2 mb-10'>
+          <div className='max-w-[75%] mx-auto relative mt-2 mb-10'>
             <img
-              className='max-w-[500px]'
+              className='w-full mx-auto'
               src={`https://r2r-comfyui.s3.amazonaws.com/users/${sources[0]}`}
               alt=''
             />
@@ -82,7 +83,6 @@ export const SettingsPage = () => {
             <input
               className='hidden'
               type='file'
-              multiple
               ref={inputUpdateAvatarPhoto}
               onChange={handleImageChange}
             />
@@ -125,6 +125,7 @@ export const SettingsPage = () => {
             <p className='text-[#B1B1B1] pb-4'>цвет фона</p>
             <ColorSelector
               random
+              transparent
               onColorChange={(color) => {
                 setBackgroundColor(color);
               }}
@@ -191,7 +192,7 @@ export const SettingsPage = () => {
       <div className='fixed flex bottom-5 w-full'>
         <button
           onClick={onGenerate}
-          className='px-8 py-4 text-lg bg-secondary rounded-lg w-fit mx-auto active:scale-95'
+          className='px-8 py-4 text-lg bg-[#DD4B34] rounded-lg w-fit mx-auto active:scale-95'
         >
           генерировать портрет
         </button>

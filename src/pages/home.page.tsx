@@ -9,13 +9,13 @@ export const HomePage = () => {
 
   const { addSource } = useGenerationStore();
 
-  const handleImageChange = async (e: React.FormEvent<HTMLInputElement>) => {
-    console.log(e);
+  const handleImageChange = async () => {
     const files = inputUpdateAvatarPhoto.current?.files;
-    // make sure that it's not null or undefined
-    if (files) {
+
+    if (!files) return;
+    for (const file of files) {
       const formData = new FormData();
-      formData.append('file', files[0]);
+      formData.append('file', file);
 
       const res = await uploadFile(formData);
       addSource(res.data.url);
