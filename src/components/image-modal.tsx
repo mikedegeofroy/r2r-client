@@ -18,7 +18,7 @@ const ImageModal = ({ isOpen, imageSrc, onClose }: ImageModalProps) => {
         <img
           src={imageSrc}
           alt='Full screen view'
-          className='max-h-screen max-w-screen'
+          className='max-h-[80vh] max-w-screen'
         />
       </div>
     </div>
