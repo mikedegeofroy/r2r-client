@@ -36,7 +36,7 @@ export const useGenerationStore = create<IGenerationStore>()(
       // Add a new generation with parameters
       addGeneration: (generation: IGeneration) => {
         set((state) => ({
-          generations: [...state.generations, generation],
+          generations: [generation, ...state.generations],
         }));
       },
 
