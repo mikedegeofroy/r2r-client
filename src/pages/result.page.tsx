@@ -90,7 +90,6 @@ export const ResultPage = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setCurrentImage(null);
     };
 
     return (
@@ -138,8 +137,7 @@ export const ResultPage = () => {
                                         <ZoomIn className='text-[#383838] h-5 w-5' />
                                     </div>
                                     <div
-                                        onClick={() => removeGeneration(x.id)} // Handle deletion() => openModal(x.source)
-                                        className='absolute right-2 cursor-pointer top-2 bg-[#8B0000] rounded-full p-2'
+                                        onClick={() => removeGeneration(x.id)} className='absolute right-2 cursor-pointer top-2 bg-[#8B0000] rounded-full p-2'
                                     >
                                         <X className='h-3 w-3' />
                                     </div>
