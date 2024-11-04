@@ -3,10 +3,10 @@ import { uploadFile } from '@/api/upload.api';
 import ImageModal from '@/components/image-modal';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ColorSelector } from '@/components/ui/color-selector';
+import { ImageBox } from '@/components/ui/image-box';
 import { Slider } from '@/components/ui/slider';
 import { hexToColor, sliderToAgression, sliderToBodyType } from '@/lib/utils';
 import { useGenerationStore } from '@/stores/generation.store';
-import { X, ZoomIn } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,14 +16,14 @@ export const SettingsPage = () => {
 
     const { sources, addSource, removeSource } = useGenerationStore();
 
-    const [selectedSources, setSelectedSources] = useState<string[]>([]); // State for selected sources
+    const [selectedSources, setSelectedSources] = useState<string[]>([]); 
     const [adidasColor, setAdidasColor] = useState<string>('#FF6A52');
     const [backgroundColor, setBackgroundColor] = useState<string>('#FF6A52');
     const [strength, setStrength] = useState<string>('average');
     const [agression, setAgression] = useState<number>(0.75);
 
-    const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal open/close
-    const [currentImage, setCurrentImage] = useState(0); // Manage current image for modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentImage, setCurrentImage] = useState(0);
 
     const openModal = (imageIndex: number) => {
         setCurrentImage(imageIndex);
@@ -180,37 +180,16 @@ export const SettingsPage = () => {
                 <div className='h-full grid grid-cols-3 gap-2'>
                     {sources.length > 1 &&
                         sources.map((source, index) => (
-                            <div className='relative'>
-                                <div
-                                    onClick={() =>
-                                        openModal(
-                                           index 
-                                        )
-                                    } // Handle deletion
-                                    className='absolute right-2 cursor-pointer bottom-2 bg-[#D9D9D9] rounded-full p-1'
-                                >
-                                    <ZoomIn className='text-[#383838] h-5 w-5' />
-                                </div>
-                                <div
-                                    onClick={() => {
-                                        removeSource(source);
-                                    }}
-                                    className='absolute right-2 cursor-pointer top-2 bg-[#8B0000] rounded-full p-2'
-                                >
-                                    <X className='h-3 w-3' />
-                                </div>
-                                <img
-                                    key={source}
-                                    src={`https://r2r-comfyui.s3.amazonaws.com/users/${source}`}
-                                    alt=''
-                                    onClick={() => toggleSourceSelection(source)}
-                                    className={`border-4 cursor-pointer aspect-square object-cover ${selectedSources.includes(source) ? 'border-red-500' : ''
-                                        }`}
-                                />
-                            </div>
+                            <ImageBox
+                                onDelete={() => removeSource(source)}
+                                onZoom={() => openModal(index)}
+                                onClick={() => toggleSourceSelection(source)}
+                                src={`https://r2r-comfyui.s3.amazonaws.com/users/${source}`}
+                                selected={selectedSources.includes(source)}
+                            />
                         ))}
                 </div>
-            </div>
+            </div >
             <div className='fixed flex bottom-5 w-full'>
                 <button
                     onClick={onGenerate}
