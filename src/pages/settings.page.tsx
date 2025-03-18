@@ -82,7 +82,7 @@ export const SettingsPage = () => {
                     <div className='max-w-[75%] mx-auto relative mt-2 mb-10'>
                         <img
                             className='w-full mx-auto'
-                            src={`https://r2r-comfyui.s3.amazonaws.com/users/${sources[0]}`}
+                            src={`https://roll-to-rule-s3.storage.yandexcloud.net/users/${sources[0]}`}
                             alt=''
                         />
                         <button
