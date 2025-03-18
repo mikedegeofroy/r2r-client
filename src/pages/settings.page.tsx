@@ -41,7 +41,7 @@ export const SettingsPage = () => {
     const onGenerate = async () => {
         for (const source of sources.length !== 1 ? selectedSources : sources) {
             await generateImage(
-                `https://r2r-comfyui.s3.amazonaws.com/users/${source}`,
+                `https://roll-to-rule-s3.storage.yandexcloud.net/users/${source}`,
                 hexToColor(adidasColor),
                 backgroundColor,
                 agression.toFixed(0),
@@ -184,7 +184,7 @@ export const SettingsPage = () => {
                                 onDelete={() => removeSource(source)}
                                 onZoom={() => openModal(index)}
                                 onClick={() => toggleSourceSelection(source)}
-                                src={`https://r2r-comfyui.s3.amazonaws.com/users/${source}`}
+                                src={`https://roll-to-rule-s3.storage.yandexcloud.net/users/${source}`}
                                 selected={selectedSources.includes(source)}
                             />
                         ))}
@@ -200,7 +200,7 @@ export const SettingsPage = () => {
             </div>
             <ImageModal
                 isOpen={isModalOpen}
-                imageSrc={`https://r2r-comfyui.s3.amazonaws.com/users/${sources[currentImage]}`}
+                imageSrc={`https://roll-to-rule-s3.storage.yandexcloud.net/users/${sources[currentImage]}`}
                 onClose={closeModal}
                 onNext={() => setCurrentImage(current => current + 1)}
                 onPrev={() => setCurrentImage(current => current - 1)} />
